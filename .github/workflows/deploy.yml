@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local_path: "./product-search.php"
           remote_path: "/site/public_html/wp-content/plugins/product-search/"
-          args: >-
+          args: |
             -avzr --delete --progress
             --exclude=".git*"
             --exclude=".github*"
