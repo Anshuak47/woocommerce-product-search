@@ -20,10 +20,10 @@ jobs:
           port: 3452
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local_path: "./"
+          local_path: "./product-search.php"
           remote_path: "/site/public_html/wp-content/plugins/product-search/"
           args: >-
-            -avzr --delete
+            -avzr --delete --progress
             --exclude=".git*"
             --exclude=".github*"
             --exclude="node_modules/"
