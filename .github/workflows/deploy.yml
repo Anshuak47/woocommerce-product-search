@@ -1,9 +1,9 @@
-name: Deploy Plugin to Live Site
+name: Deploy Plugin via SFTP
 
 on:
   push:
     branches:
-      - main # Change if your default branch is 'master'
+      - main # change if your repo uses 'master'
 
 jobs:
   deploy:
@@ -13,21 +13,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Upload plugin via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Upload plugin via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./ # change if plugin is in subfolder
-          server-dir: /site/public_html/wp-content/plugins/product-search/
-          exclude: |
-            **/.git*
-            **/.github*
-            **/.DS_Store
-            **/node_modules/**
-            **/vendor/**
-            **/*.md
-            **/*.yml
-            **/*.yaml
-            **/*.json
+          server: ${{ secrets.SFTP_SERVER }}
+          port: 3452
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local_path: "./"
+          remote_path: "/site/public_html/wp-content/plugins/product-search/"
+          args: >-
+            -avzr --delete
+            --exclude=".git*"
+            --exclude=".github*"
+            --exclude="node_modules/"
+            --exclude="vendor/"
+            --exclude="*.md"
+            --exclude="*.yml"
+            --exclude="*.yaml"
+            --exclude="*.json"
+            --exclude="*.DS_Store"
