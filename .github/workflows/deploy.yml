@@ -1,0 +1,33 @@
+name: Deploy Plugin to Live Site
+
+on:
+  push:
+    branches:
+      - main # Change if your default branch is 'master'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Upload plugin via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./ # change if plugin is in subfolder
+          server-dir: /site/public_html/wp-content/plugins/product-search/
+          exclude: |
+            **/.git*
+            **/.github*
+            **/.DS_Store
+            **/node_modules/**
+            **/vendor/**
+            **/*.md
+            **/*.yml
+            **/*.yaml
+            **/*.json
