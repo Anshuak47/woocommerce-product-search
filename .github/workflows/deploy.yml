@@ -16,10 +16,10 @@ jobs:
       - name: Upload plugin via SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.6
         with:
-          server: ${{ secrets.SFTP_SERVER }}
+          server: ${{ secrets.FTP_SERVER }}
           port: 3452
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           local_path: "./"
           remote_path: "/site/public_html/wp-content/plugins/product-search/"
           args: >-
