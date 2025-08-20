@@ -10,19 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Deploy via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy via lftp (SFTP)
+        uses: pressidium/lftp-mirror-action@v1
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: sftp
+          host: ${{ secrets.FTP_SERVER }}
           port: 3453
-          local-dir: ./product-search.php # your local plugin folder
-          server-dir: /site/public_html/wp-content/plugins/product-search/
+          user: ${{ secrets.FTP_USERNAME }}
+          pass: ${{ secrets.FTP_PASSWORD }}
+          localDir: "./product-search.php"
+          remoteDir: "/site/public_html/wp-content/plugins/product-search/"
           exclude: |
             **/.git*
             **/.github*
