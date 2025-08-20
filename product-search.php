@@ -14,13 +14,14 @@ function pres_product_search_shortcode(){
 }
 
 function pres_product_search_callback( $atts ){
-    // $atts = shortcode_atts(
-    //     array(
-    //         'id' => '',
-    //         'category' => array('categories'),
-    //     ),
-    //     $atts,
-    //     'product-search'
-    // );
-    echo 'Hello';
+    $atts = shortcode_atts(
+        array(
+            'id' => '',
+            'category' => array('category'),
+        ),
+        $atts,
+        'product-search'
+    );
+
+    echo "<pre>".print_r($atts,1)."</pre>";
 }
