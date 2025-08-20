@@ -20,15 +20,6 @@ jobs:
           port: 3453
           user: ${{ secrets.FTP_USERNAME }}
           pass: ${{ secrets.FTP_PASSWORD }}
-          localDir: "./product-search.php"
+          localDir: "./"
           remoteDir: "/site/public_html/wp-content/plugins/product-search/"
-          exclude: |
-            **/.git*
-            **/.github*
-            **/node_modules/**
-            **/vendor/**
-            **/*.md
-            **/*.yml
-            **/*.yaml
-            **/*.json
-            **/*.DS_Store
+          ignoreFile: ".gitignore"
