@@ -9,9 +9,21 @@
  * License:
  */
 
-include("/templates/search-form.php");
+
 add_action("init","pres_product_search_shortcode", 10,1);
 function pres_product_search_shortcode(){
     add_shortcode("product-search","pres_product_search_callback");
 }
 
+function pres_product_search_callback( $atts ){
+    $atts = shortcode_atts(
+        array(
+            'id' => '',
+            'category' => array('category'),
+        ),
+        $atts,
+        'product-search'
+    );
+
+    include("/templates/search-form.php");
+}
