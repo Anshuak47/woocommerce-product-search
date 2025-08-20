@@ -1,35 +1,35 @@
-name: Deploy Plugin via SFTP
+name: Deploy Plugin to Live Site
 
 on:
   push:
     branches:
-      - main # change if your repo uses 'master'
+      - main # or "master" if that's your default
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Upload plugin via SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.6
+      - name: Deploy via SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          protocol: sftp
           port: 3453
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local_path: "./product-search.php"
-          remote_path: "/site/public_html/wp-content/plugins/product-search/"
-          args: |
-            -avzr --delete --progress
-            --exclude=".git*"
-            --exclude=".github*"
-            --exclude="node_modules/"
-            --exclude="vendor/"
-            --exclude="*.md"
-            --exclude="*.yml"
-            --exclude="*.yaml"
-            --exclude="*.json"
-            --exclude="*.DS_Store"
+          local-dir: ./product-search.php # your local plugin folder
+          server-dir: /site/public_html/wp-content/plugins/product-search/
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
+            **/vendor/**
+            **/*.md
+            **/*.yml
+            **/*.yaml
+            **/*.json
+            **/*.DS_Store
