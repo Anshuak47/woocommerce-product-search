@@ -1,0 +1,65 @@
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+#product-search-form #pres-search-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#pres-search-form div {
+  padding-top: 0.8em;
+  padding-bottom: 0.8em;
+  display: flex;
+  flex-direction: column;
+}
+
+#pres-search-form label {
+  padding-bottom: 0.8em;
+  margin-bottom: 0.8em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  font-weight: 700;
+  color: #383838;
+  font-family: "Merriweather" !important;
+}
+#pres-search-form select {
+  padding: 0.5em;
+
+  font-size: 16px;
+  border-radius: 5px;
+  border-color: #aaa;
+}
+#pres-search-form .search-button {
+  -webkit-appearance: none;
+  background-color: #dcaa2e;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  padding: 0.8em;
+  text-transform: uppercase;
+  transition: all 0.1s linear;
+}
+#pres-search-form .search-button:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+#pres-search-form .select2-container .select2-selection--single {
+  height: auto;
+}
+#pres-search-form
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+  height: -webkit-fill-available;
+}
