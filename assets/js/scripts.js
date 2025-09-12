@@ -1,33 +1,57 @@
 var $ = jQuery;
 jQuery(document).ready(function (e) {
-  jQuery("#author-dropdown").select2({
-    tags: true,
-    tokenSeparators: [",", " "],
-    placeholder: "Type to search or add new",
-    allowClear: true,
-  });
+  jQuery("#author-dropdown")
+    .select2({
+      tags: true,
+      tokenSeparators: [",", " "],
+      placeholder: "Type to search or add new",
+      allowClear: true,
+    })
+    .on("select2:clear", function (e) {
+      $(this).empty();
+      $("#author-id").val("");
+      $("#author-dropdown").empty();
+
+      console.log("Cleared all fields");
+    })
+    .on("select2:select", function (e) {
+      // Update hidden fields
+      $("#author-id").val($(this).val());
+    });
 });
 
 jQuery(document).ready(function ($) {
-  $("#book-categories").select2({
-    placeholder: "Select a category",
-    allowClear: true,
-    width: "100%",
-    templateResult: function (option) {
-      // Custom styling for indented options
-      if (option.text && option.text.startsWith(" ")) {
-        return $(
-          '<span style="padding-left: 20px;">' + option.text + "</span>"
-        );
-      }
-      return option.text;
-    },
-  });
+  $("#book-categories")
+    .select2({
+      placeholder: "Select a category",
+      allowClear: true,
+      width: "100%",
+      templateResult: function (option) {
+        // Custom styling for indented options
+        if (option.text && option.text.startsWith(" ")) {
+          return $(
+            '<span style="padding-left: 20px;">' + option.text + "</span>"
+          );
+        }
+        return option.text;
+      },
+    })
+    .on("select2:select", function (e) {
+      // Update hidden fields
+      $("#book-category").val($(this).val());
+    })
+    .on("select2:clear", function (e) {
+      $(this).empty();
+      $("#book-category").val("");
+      $("#book-categories").empty();
+
+      console.log("Cleared all fields");
+    });
 });
 
 // Autocomplete search
 jQuery(document).ready(function ($) {
-  $("#term-search")
+  $("#title-search")
     .select2({
       ajax: {
         url: "/wp-admin/admin-ajax.php",
@@ -40,7 +64,7 @@ jQuery(document).ready(function ($) {
           };
         },
         processResults: function (data) {
-          $("#term-search").empty();
+          $("#title-search").empty();
           return {
             results: data,
             pagination: {
@@ -62,18 +86,18 @@ jQuery(document).ready(function ($) {
       var data = e.params.data;
 
       // Update hidden fields
-      $("#selected-post-id").val(data.post_id);
+      $("#selected-post-id").val(data.text);
 
       // Update select element attributes
-      $(this).attr("data-post-id", data.post_id);
+      $(this).attr("data-post-title", data.text);
     })
     .on("select2:clear", function (e) {
       $(this).empty();
       $("#selected-post-id").val("");
-      $("#term-search").empty();
+      $("#title-search").empty();
 
       // Clear ALL hidden fields and data attributes
-      $(this).removeAttr("data-post-id");
+      $(this).removeAttr("data-post-title");
 
       $(this).append('<option value="">Start typing to search...</option>');
 
@@ -84,9 +108,9 @@ jQuery(document).ready(function ($) {
 
       // If empty value, clear everything
       if (!$(this).val()) {
-        $("#term-search").empty();
+        $("#title-search").empty();
         $("#selected-post-id").val("");
-        $(this).removeAttr("data-post-id");
+        $(this).removeAttr("data-post-title");
       }
     });
 });

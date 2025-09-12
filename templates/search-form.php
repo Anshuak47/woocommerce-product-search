@@ -55,15 +55,18 @@ $product_formats = get_terms(array(
     'fields' => 'id=>name'
 ));
 
-$formats = ['Hardcover', 'Paperback', 'eBook', 'Audiobook'];
 ?>
 <div id="product-search-form" class="product-search-form">
-    <form method="GET" action="" aria-labelledby="search-form-title" id="pres-search-form">
-        <input type="hidden" id="selected-post-id" name="post_id" value="">
-       
+    <form method="GET" action="<?php echo home_url();?>/search-results/" aria-labelledby="search-form-title" id="pres-search-form">
+        <!-- Get title-search title value -->
+        <input type="hidden" name="pps" value="pps">
+        <input type="hidden" id="selected-post-id" name="book-title" value="">
+        <input type="hidden" id="book-category" name="product-cat" value="">
+
+
         <div class="author-search">
-            <label for="author">Author:</label>
-            <select name="author" id="author-dropdown" aria-describedby="author-desc">
+            <label for="author-id">Author:</label>
+            <select name="author-id" id="author-dropdown" aria-describedby="author-desc">
                 <option value="">Select Author</option>
 
                 <?php foreach ($author_terms as $id => $name): ?>
@@ -76,18 +79,19 @@ $formats = ['Hardcover', 'Paperback', 'eBook', 'Audiobook'];
         <div class="book-category-search">
             <label for="category">Book Category:</label>
            
+            <select id="book-categories" name="category_id">;
+                <option value="">Select Category...</option>;
                 <?php
                 // Usage
                 $terms = get_hierarchical_terms('product_cat');
 
-                echo '<select id="book-categories" name="category_id">';
-                echo '<option value="">Select Category...</option>';
                 foreach($terms as $id => $name) {
                     echo '<option value="' . $id . '">' . esc_html($name) . '</option>';
                 }
-                echo '</select>';
-            ?>
-            <span id="category-desc" class="sr-only">Choose a book category</span>
+
+                ?>
+                </select>
+                <span id="category-desc" class="sr-only">Choose a book category</span>
         </div>
 
         <div class="book-tag-search">
@@ -104,8 +108,8 @@ $formats = ['Hardcover', 'Paperback', 'eBook', 'Audiobook'];
 
 
         <div class="searchby-title">
-            <label for="title">Search by Title:</label>
-            <select id="term-search" name="term_id" style="width: 100%;">
+            <label for="title-search">Search by Title:</label>
+            <select id="title-search" name="prod-title" style="width: 100%;">
                 <option value="">Start typing to search...</option>
             </select>
             <span id="title-desc" class="sr-only">Type the book title you want to search for</span>
@@ -121,8 +125,6 @@ $formats = ['Hardcover', 'Paperback', 'eBook', 'Audiobook'];
             </select>
             <span id="format-desc" class="sr-only">Choose the format of the book</span>
         </div>
-
-
 
         <button type="submit" class="search-button">Search</button>
     </form>
