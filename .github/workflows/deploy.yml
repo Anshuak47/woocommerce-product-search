@@ -1,27 +1,27 @@
-name: Deploy Plugin to Live Site
+# name: Deploy Plugin to Live Site
 
-on:
-  push:
-    branches:
-      - main # or "master" if that's your default
+# on:
+#   push:
+#     branches:
+#       - main # or "master" if that's your default
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-      - name: Deploy via lftp (SFTP)
-        uses: pressidium/lftp-mirror-action@v1
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          port: 2855
-          user: ${{ secrets.FTP_USERNAME }}
-          pass: ${{ secrets.FTP_PASSWORD }}
-          onlyNewer: true
-          settings: 'sftp:auto-confirm=yes'
-          localDir: "./"
-          remoteDir: "/site/public_html/wp-content/plugins/product-search/"
-          ignoreFile: ".gitignore"
+#       - name: Deploy via lftp (SFTP)
+#         uses: pressidium/lftp-mirror-action@v1
+#         with:
+#           host: ${{ secrets.FTP_SERVER }}
+#           port: 2855
+#           user: ${{ secrets.FTP_USERNAME }}
+#           pass: ${{ secrets.FTP_PASSWORD }}
+#           onlyNewer: true
+#           settings: "sftp:auto-confirm=yes"
+#           localDir: "./"
+#           remoteDir: "/site/public_html/wp-content/plugins/product-search/"
+#           ignoreFile: ".gitignore"

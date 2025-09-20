@@ -7,12 +7,14 @@
  * Author: Journey Websites
  * Author URI: https://journeywebsites.com
  * License:
+ * text-domain: product-search
  */
 
 
 add_action("init","pres_product_search_shortcode", 10,1);
 function pres_product_search_shortcode(){
     add_shortcode("product-search","pres_product_search_callback");
+    add_shortcode("product-filter","pres_product_filter_callback");
 }
 
 function pres_product_search_enqueue_styles() {
@@ -55,6 +57,19 @@ function pres_product_search_callback( $atts ){
         return ob_get_clean();
     } else {
         return '<p>Product search template not found.</p>';
+    }
+}
+
+function pres_product_filter_callback(){
+
+    $template_path = plugin_dir_path(__FILE__) . 'templates/filter-form.php';
+
+    if (file_exists($template_path)) {
+        ob_start();
+        include $template_path;
+        return ob_get_clean();
+    } else {
+        return '<p>Product filter template not found.</p>';
     }
 }
 
@@ -102,10 +117,11 @@ function pres_woocommerce_shortcode_products_query($query){
     return $query;
 }
 
+// Search Products according to the search box
 add_action( 'pre_get_posts', 'pres_search_products', 10,1);
 function pres_search_products( $query ) {
         
-    if ( !is_admin() && $query->get('post_type') == 'product' && is_page('search-results')) {
+    if ( !is_admin() && $query->get('post_type') == 'product' && is_page('search-results') ) {
 
         // Force WooCommerce products
        
@@ -202,3 +218,5 @@ function pres_search_products( $query ) {
     }
 
 }
+
+

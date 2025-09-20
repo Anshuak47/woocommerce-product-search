@@ -63,3 +63,97 @@
   .select2-selection__arrow {
   height: -webkit-fill-available;
 }
+
+/* Styles for Filter page */
+.search-filter-container {
+  display: flex;
+}
+
+.search-filter-container .product-search-form {
+  width: 28%;
+  padding: 20px;
+}
+
+.search-filter-container .bookformat-search label {
+  font-size: 16px;
+  border: none;
+  padding: 5px 0px 5px 0px;
+  font-weight: normal;
+  margin-left: 5px;
+}
+.search-filter-container .pps-product-section {
+  width: 75%;
+}
+.search-filter-container .pps-product-loop {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 30px;
+}
+
+.pps-product-loop .woocommerce-loop-product__title {
+  font-size: 1em;
+}
+
+.woocommerce-pagination span.page-numbers.current,
+a.next.page-numbers,
+a.prev.page-numbers {
+  padding: 5px 10px;
+  background: #84b13b;
+  color: white;
+  font-weight: bold;
+  border: 1px solid #84b139;
+}
+
+a.next.page-numbers:hover,
+a.prev.page-numbers {
+  text-decoration: none;
+}
+.pps-product-section .woocommerce-pagination {
+  width: max-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 1px solid #84b13b;
+}
+.woocommerce-pagination a.page-numbers,
+.woocommerce-pagination .page-numbers.dots {
+  padding: 5px 10px;
+  border: 1px solid #84b139;
+}
+.woocommerce-pagination a.page-numbers:hover {
+  text-decoration: none;
+}
+.format-checkbox {
+  width: 18px; /* default ~14px, so this makes it bigger */
+  height: 18px;
+  cursor: pointer;
+  accent-color: #84b13b; /* WP blue, you can change to your brand color */
+  vertical-align: text-bottom;
+  appearance: none; /* For most browsers */
+  -webkit-appearance: none; /* Safari */
+  -moz-appearance: none; /* Firefox */
+  border: 2px solid #999999;
+  border-radius: 4px;
+}
+.format-checkbox:checked {
+  background-color: #84b13b;
+}
+.format-checkbox:checked:focus {
+  outline: unset;
+
+  outline-offset: unset;
+}
+.format-checkbox:checked::after {
+  content: "✔";
+  color: #fff;
+  font-size: 16px;
+  position: relative;
+  bottom: 3px;
+}
+
+/* Align label nicely */
+.format-checkbox + label {
+  font-size: 16px;
+  cursor: pointer;
+}

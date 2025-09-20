@@ -4,7 +4,7 @@ jQuery(document).ready(function (e) {
     .select2({
       tags: true,
       tokenSeparators: [",", " "],
-      placeholder: "Type to search or add new",
+      placeholder: "Type or Select Author",
       allowClear: true,
     })
     .on("select2:clear", function (e) {
@@ -18,12 +18,11 @@ jQuery(document).ready(function (e) {
       // Update hidden fields
       $("#author-id").val($(this).val());
     });
-});
 
-jQuery(document).ready(function ($) {
+  // Book category select2
   $("#book-categories")
     .select2({
-      placeholder: "Select a category",
+      placeholder: "Select a book category",
       allowClear: true,
       width: "100%",
       templateResult: function (option) {
@@ -47,10 +46,8 @@ jQuery(document).ready(function ($) {
 
       console.log("Cleared all fields");
     });
-});
 
-// Autocomplete search
-jQuery(document).ready(function ($) {
+  // Book title search
   $("#title-search")
     .select2({
       ajax: {
@@ -64,7 +61,6 @@ jQuery(document).ready(function ($) {
           };
         },
         processResults: function (data) {
-          $("#title-search").empty();
           return {
             results: data,
             pagination: {
@@ -74,7 +70,7 @@ jQuery(document).ready(function ($) {
         },
         cache: false,
       },
-      placeholder: "Search posts...",
+      placeholder: "Search books...",
       minimumInputLength: 3,
       allowClear: true,
     })
@@ -86,10 +82,10 @@ jQuery(document).ready(function ($) {
       var data = e.params.data;
 
       // Update hidden fields
-      $("#selected-post-id").val(data.text);
+      $("#selected-post-id").val(data.id);
 
       // Update select element attributes
-      $(this).attr("data-post-title", data.text);
+      $(this).attr("data-post-title", data.id);
     })
     .on("select2:clear", function (e) {
       $(this).empty();
@@ -113,4 +109,10 @@ jQuery(document).ready(function ($) {
         $(this).removeAttr("data-post-title");
       }
     });
+
+    // Force radio button behaviour on checkbox
+     $(document).on("change", ".format-checkbox", function () {
+       // Uncheck all except the one clicked
+       $(".format-checkbox").not(this).prop("checked", false);
+     });
 });
