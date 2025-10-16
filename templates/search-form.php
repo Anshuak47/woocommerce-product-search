@@ -57,15 +57,15 @@ $product_formats = get_terms(array(
 
 ?>
 <div id="product-search-form" class="product-search-form">
-    <form method="GET" action="<?php echo home_url();?>/search-results/" aria-labelledby="search-form-title" id="pres-search-form">
+    <form method="GET" action="<?php echo home_url();?>/filter-test/" aria-labelledby="search-form-title" id="pres-search-form">
         <!-- Get title-search title value -->
-        <input type="hidden" name="pps" value="pps">
+        <input type="hidden" name="ppsf" value="ppsf">
         <input type="hidden" id="selected-post-id" name="book-title" value="">
         <input type="hidden" id="book-category" name="product-cat" value="">
 
 
         <div class="author-search">
-            <label for="author-id">
+            <label for="author-dropdown">
                 <?php
                     $author_label = esc_html("Author","product-search");
                     echo apply_filters('search_form_author_label', $author_label );
@@ -82,7 +82,7 @@ $product_formats = get_terms(array(
         </div>
 
         <div class="book-category-search">
-            <label for="category">
+            <label for="category_id">
                 <?php
                     $book_category_label = esc_html("Book Category:","product-search");
                     echo apply_filters('search_form_category_label', $book_category_label );
@@ -107,14 +107,14 @@ $product_formats = get_terms(array(
         </div>
 
         <div class="book-tag-search">
-            <label for="product-tag">
+            <label for="tag-dropdown">
                 <?php
                     $book_tag_label = esc_html("Search by Tags","product-search");
                     echo apply_filters('search_form_tag_label', $book_tag_label );
                 ?>
             </label>
             <select name="product-tag" id="tag-dropdown" aria-describedby="tag-desc">
-                <option value="">Search by Tags</option>
+                <option value="" class="placeholder">Search by Tags</option>
 
                 <?php foreach ($product_tags as $id => $name): ?>
                     <option value="<?php echo htmlspecialchars($id); ?>"><?php echo htmlspecialchars($name); ?></option>

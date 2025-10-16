@@ -84,7 +84,15 @@ function handle_post_search() {
         'post_type' => 'product', // Change to your post type
         's' => $search_term,
         'posts_per_page' => 20,
-        'post_status' => 'publish'
+        'post_status' => 'publish',
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'product_visibility',
+                'field'    => 'name',
+                'terms'    => array('exclude-from-catalog', 'exclude-from-search'),
+                'operator' => 'NOT IN',
+            ),
+        ),
     ));
     
     foreach($posts as $post) {

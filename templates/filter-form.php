@@ -57,7 +57,9 @@ $product_formats = get_terms(array(
                         <label for="<?php echo htmlspecialchars($id); ?>"><?php echo htmlspecialchars($name); ?></label><br>
                     <?php endforeach; ?>
                     </p>
+                    
                 <span id="format-desc" class="sr-only">Choose the format of the book</span>
+
             </div>
 
             <button type="submit" class="search-button"><?php echo esc_html("Search","product-search");?></button>
@@ -75,6 +77,14 @@ $product_formats = get_terms(array(
                 'paged'          => $paged,
                 'orderby' => 'menu_order title',
                 'order'   => 'ASC',
+                'tax_query' => array(
+                    array(
+                        'taxonomy' => 'product_visibility',
+                        'field'    => 'name',
+                        'terms'    => array('exclude-from-catalog', 'exclude-from-search'),
+                        'operator' => 'NOT IN',
+                    ),
+                ),
             );
             if ( ! empty( $_GET['book-title'] ) ) {
                 $args['p'] = intval( $_GET['book-title'] );
@@ -111,7 +121,7 @@ $product_formats = get_terms(array(
                         
                         <div class="prod-details">
                             <div class="product-title">
-                                <h2 class="woocommerce-loop-product__title"><a href="<?php the_permalink(); ?>" class="pres-prod-title"><?php the_title(); ?></a></h2>
+                                <h2 class="woocommerce-loop-product__title pres-prod-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
                             </div>
                             <div class="product-price">
                             

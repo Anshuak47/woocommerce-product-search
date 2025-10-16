@@ -110,9 +110,33 @@ jQuery(document).ready(function (e) {
       }
     });
 
-    // Force radio button behaviour on checkbox
-     $(document).on("change", ".format-checkbox", function () {
-       // Uncheck all except the one clicked
-       $(".format-checkbox").not(this).prop("checked", false);
-     });
+  // // Force radio button behaviour on checkbox
+  // $(document).on("change", ".format-checkbox", function () {
+  //   // Uncheck all except the one clicked
+  //   $(".format-checkbox").not(this).prop("checked", false);
+  // });
+
+  //  Tag Dropdown
+  jQuery("#tag-dropdown")
+    .select2({
+      tags: true,
+      tokenSeparators: [",", " "],
+      placeholder: "Type or Select Tags",
+      allowClear: true,
+    })
+    .on("select2:clear", function (e) {
+      $(this).empty();
+    });
+
+  //  Format Dropdown
+  jQuery("#format")
+    .select2({
+      tags: true,
+      tokenSeparators: [",", " "],
+      placeholder: "Type or Select Format",
+      allowClear: true,
+    })
+    .on("select2:clear", function (e) {
+      $(this).empty();
+    });
 });
