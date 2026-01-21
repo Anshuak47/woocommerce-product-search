@@ -14,7 +14,7 @@
 add_action("init","pres_product_search_shortcode", 10,1);
 function pres_product_search_shortcode(){
     add_shortcode("product-search","pres_product_search_callback");
-    add_shortcode("product-filter","pres_product_filter_callback");
+    add_shortcode("search-results","pres_product_search_results_callback");
 }
 
 function pres_product_search_enqueue_styles() {
@@ -60,7 +60,7 @@ function pres_product_search_callback( $atts ){
     }
 }
 
-function pres_product_filter_callback(){
+function pres_product_search_results_callback(){
 
     $template_path = plugin_dir_path(__FILE__) . 'templates/filter-form.php';
 
@@ -106,7 +106,7 @@ function handle_post_search() {
 }
 
 function themeslug_query_vars( $vars ) {
-	$vars[] = 'author-id';
+	$vars[] = 'author_id';
     $vars[] = 'product-cat';
     $vars[] = 'product-tag';
     $vars[] = 'format';
@@ -155,7 +155,8 @@ function pres_search_products( $query ) {
             }
 
             // Author/Brand filter
-            if ( $author = get_query_var( 'author-id' ) ) {
+            if ( $author = get_query_var( 'author_id' ) ) {
+               
                 $tax_query[] = array(
                     'taxonomy' => 'product_brand',
                     'field'    => 'term_id',
@@ -228,3 +229,42 @@ function pres_search_products( $query ) {
 }
 
 
+
+add_action('wp_ajax_search_posts', 'ajax_search_posts');
+add_action('wp_ajax_nopriv_search_posts', 'ajax_search_posts');
+function ajax_search_posts() {
+    $results = [];
+
+    // Handle direct ID lookup (for preselect)
+    if ( ! empty( $_GET['id'] ) ) {
+        $post_id = intval( $_GET['id'] );
+        $post = get_post( $post_id );
+        if ( $post && 'product' === $post->post_type && 'publish' === $post->post_status ) {
+            $results[] = [
+                'id'   => $post->ID,
+                'text' => $post->post_title,
+            ];
+        }
+        wp_send_json( $results );
+    }
+
+    // Regular search by query
+    $query = isset($_GET['q']) ? sanitize_text_field($_GET['q']) : '';
+    $args = [
+        'post_type'      => 'product',
+        'post_status'    => 'publish',
+        's'              => $query,
+        'posts_per_page' => 20,
+        'fields'         => 'ids',
+    ];
+
+    $posts = get_posts($args);
+    foreach ($posts as $id) {
+        $results[] = [
+            'id'   => $id,
+            'text' => get_the_title($id),
+        ];
+    }
+
+    wp_send_json($results);
+}

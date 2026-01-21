@@ -1,114 +1,6 @@
 var $ = jQuery;
 jQuery(document).ready(function (e) {
-  jQuery("#author-dropdown")
-    .select2({
-      tags: true,
-      tokenSeparators: [",", " "],
-      placeholder: "Type or Select Author",
-      allowClear: true,
-    })
-    .on("select2:clear", function (e) {
-      $(this).empty();
-      $("#author-id").val("");
-      $("#author-dropdown").empty();
-
-      console.log("Cleared all fields");
-    })
-    .on("select2:select", function (e) {
-      // Update hidden fields
-      $("#author-id").val($(this).val());
-    });
-
-  // Book category select2
-  $("#book-categories")
-    .select2({
-      placeholder: "Select a book category",
-      allowClear: true,
-      width: "100%",
-      templateResult: function (option) {
-        // Custom styling for indented options
-        if (option.text && option.text.startsWith(" ")) {
-          return $(
-            '<span style="padding-left: 20px;">' + option.text + "</span>"
-          );
-        }
-        return option.text;
-      },
-    })
-    .on("select2:select", function (e) {
-      // Update hidden fields
-      $("#book-category").val($(this).val());
-    })
-    .on("select2:clear", function (e) {
-      $(this).empty();
-      $("#book-category").val("");
-      $("#book-categories").empty();
-
-      console.log("Cleared all fields");
-    });
-
   // Book title search
-  $("#title-search")
-    .select2({
-      ajax: {
-        url: "/wp-admin/admin-ajax.php",
-        dataType: "json",
-        delay: 250,
-        data: function (params) {
-          return {
-            q: params.term,
-            action: "search_posts",
-          };
-        },
-        processResults: function (data) {
-          return {
-            results: data,
-            pagination: {
-              more: false, // Disable pagination
-            },
-          };
-        },
-        cache: false,
-      },
-      placeholder: "Search books...",
-      minimumInputLength: 3,
-      allowClear: true,
-    })
-    .on("select2:open", function (e) {
-      // Clear the search box when opened
-      $(".select2-search__field").val("");
-    })
-    .on("select2:select", function (e) {
-      var data = e.params.data;
-
-      // Update hidden fields
-      $("#selected-post-id").val(data.id);
-
-      // Update select element attributes
-      $(this).attr("data-post-title", data.id);
-    })
-    .on("select2:clear", function (e) {
-      $(this).empty();
-      $("#selected-post-id").val("");
-      $("#title-search").empty();
-
-      // Clear ALL hidden fields and data attributes
-      $(this).removeAttr("data-post-title");
-
-      $(this).append('<option value="">Start typing to search...</option>');
-
-      console.log("Cleared all fields");
-    })
-    .on("change", function (e) {
-      console.log("CHANGE event:", $(this).val());
-
-      // If empty value, clear everything
-      if (!$(this).val()) {
-        $("#title-search").empty();
-        $("#selected-post-id").val("");
-        $(this).removeAttr("data-post-title");
-      }
-    });
 
   // // Force radio button behaviour on checkbox
   // $(document).on("change", ".format-checkbox", function () {
@@ -116,27 +8,125 @@ jQuery(document).ready(function (e) {
   //   $(".format-checkbox").not(this).prop("checked", false);
   // });
 
-  //  Tag Dropdown
-  jQuery("#tag-dropdown")
-    .select2({
-      tags: true,
-      tokenSeparators: [",", " "],
-      placeholder: "Type or Select Tags",
-      allowClear: true,
-    })
-    .on("select2:clear", function (e) {
-      $(this).empty();
+  // PREFILL SELECTED BOOK TITLE ON PAGE LOAD
+  (function preselectBookTitle() {
+    const selectedBookId = $("#selected-post-id").val();
+
+    if (selectedBookId) {
+      $.ajax({
+        url: "/wp-admin/admin-ajax.php",
+        type: "GET",
+        dataType: "json",
+        data: {
+          action: "search_posts",
+          id: selectedBookId,
+        },
+        success: function (data) {
+          if (data && data.length) {
+            const book = data[0];
+            const option = new Option(book.text, book.id, true, true);
+            $("#title-search").append(option).trigger("change");
+            console.log("Preselected title:", book.text);
+          }
+        },
+        error: function (err) {
+          console.error("Error preloading selected title:", err);
+        },
+      });
+    }
+  })();
+});
+
+(function () {
+  const container = document.getElementById("author-content");
+  if (!container) return;
+
+  const searchInput = document.getElementById("author-search");
+  const loadMoreBtn = container.querySelector(".load-more-author-taxonomy");
+  const LIMIT = 10;
+
+  function reorderAuthors() {
+    const items = Array.from(
+      container.querySelectorAll(".taxonomy-item-author")
+    );
+    const checked = items.filter((i) => i.querySelector("input").checked);
+    const unchecked = items.filter((i) => !i.querySelector("input").checked);
+
+    // Move checked items to top
+    checked.forEach((item) =>
+      container.insertBefore(item, container.firstChild)
+    );
+  }
+
+  function applyLoadMoreState() {
+    let visible = 0;
+    const items = container.querySelectorAll(".taxonomy-item-author");
+
+    items.forEach((item) => {
+      if (item.querySelector("input").checked) {
+        item.classList.remove("is-hidden");
+        item.style.display = "";
+        visible++;
+        return;
+      }
+
+      if (visible < LIMIT) {
+        item.classList.remove("is-hidden");
+        item.style.display = "";
+        visible++;
+      } else {
+        item.classList.add("is-hidden");
+        item.style.display = "";
+      }
     });
 
-  //  Format Dropdown
-  jQuery("#format")
-    .select2({
-      tags: true,
-      tokenSeparators: [",", " "],
-      placeholder: "Type or Select Format",
-      allowClear: true,
-    })
-    .on("select2:clear", function (e) {
-      $(this).empty();
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = container.querySelectorAll(
+        ".taxonomy-item-author.is-hidden"
+      ).length
+        ? ""
+        : "none";
+    }
+  }
+
+  // Initial reorder + load-more
+  reorderAuthors();
+  applyLoadMoreState();
+
+  // Search logic
+  searchInput.addEventListener("input", function () {
+    const query = this.value.toLowerCase().trim();
+    const items = container.querySelectorAll(".taxonomy-item-author");
+
+    reorderAuthors();
+
+    items.forEach((item) => {
+      const text = item.textContent.toLowerCase();
+      const checked = item.querySelector("input").checked;
+
+      item.classList.remove("is-hidden");
+
+      if (!query) {
+        item.style.display = "";
+      } else {
+        item.style.display = text.includes(query) || checked ? "" : "none";
+      }
     });
-});
+
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = query ? "none" : "";
+    }
+
+    if (!query) {
+      applyLoadMoreState();
+    }
+  });
+
+  // When user checks/unchecks an author
+  container.addEventListener("change", function (e) {
+    if (e.target.type !== "checkbox") return;
+
+    reorderAuthors();
+    applyLoadMoreState();
+  });
+})();
